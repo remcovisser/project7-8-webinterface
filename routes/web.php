@@ -12,3 +12,6 @@
 */
 
 Route::get('/', 'HomeController@index')->name('index');
+
+// API calls
+Route::get('/locations', 'HomeController@locations')->name('locations');

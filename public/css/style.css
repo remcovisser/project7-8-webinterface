@@ -1,0 +1,46 @@
+html, body {
+    padding: 0px;
+    margin: 0px;
+}
+
+#map {
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+    display:block;
+    position:absolute;
+}
+
+#side-menu {
+    z-index: 110;
+    height: 100%;
+    width: 15%;
+    display:block;
+    position:absolute;
+    margin-left: 85%;
+    background-color: gray;
+    opacity: 0.6;
+}
+
+.block {
+    z-index: 105;
+    height: 120px;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 20px 10px 10px 10px;
+    background-color: black;
+    position: relative;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+}
+
+.block-title {
+    font-size: 16px;
+    display: block;
+    padding-bottom: 10px;
+}
+
+.block-content {
+    font-size: 12px;
+}

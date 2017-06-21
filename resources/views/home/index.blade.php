@@ -5,47 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/style.css') }}">
+
     <title>Project 7-8</title>
-    <style>
-        html, body {
-            padding: 0px;
-            margin: 0px;
-        }
-        #map {
-            height: 100%;
-            width: 100%;
-            display:block;
-            position:absolute;
-        }
-    </style>
 </head>
 <body>
 
+<div id="side-menu">
+    @foreach($carts as $cart)
+        <div class="block" onclick="blockClicked({{$cart->id -1}})">
+            <span class="block-title">{{ $cart->name }}</span>
+            <span class="block-content">{{ $cart->description }}</span>
+        </div>
+    @endforeach
+</div>
+
 <div id="map"></div>
-
-<script>
-    function initMap() {
-        var position = new google.maps.LatLng(51.917937, 4.487838);
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 4,
-            center: position
-        });
-        var marker = new google.maps.Marker({
-            position: position,
-            map: map
-        });
-
-        setInterval(function(){
-            var newPosition = new google.maps.LatLng(marker.position.lat() + 1, marker.position.lng());
-            marker.setPosition(newPosition);
-            console.log(marker.position.lat() + " - " + marker.position.lng())
-        },1000);
-
-    }
-</script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&callback=initMap">
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&callback=initMap"></script>
+<script src="{{ asset('js/map.js') }}"></script>
 </body>
 </html>

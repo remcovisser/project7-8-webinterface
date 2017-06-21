@@ -1,10 +1,18 @@
 <?php
 namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
+use App\Models\Carts;
+use App\Models\Locations;
 
 class HomeController extends Controller
 {
     public function index() {
-        return view('home.index');
+        $carts = Carts::with('locations')->get();
+
+        return view('home.index', compact('carts'));
+    }
+
+    public function locations() {
+        return Locations::get();
     }
 }
