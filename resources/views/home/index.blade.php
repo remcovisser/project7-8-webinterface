@@ -16,6 +16,8 @@
         <div class="block" onclick="blockClicked({{$cart->id -1}})">
             <span class="block-title">{{ $cart->name }}</span>
             <span class="block-content">{{ $cart->description }}</span>
+            <div class="block-line"></div>
+            <span class="block-info">Meer info</span>
         </div>
     @endforeach
 </div>

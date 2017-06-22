@@ -14,12 +14,13 @@ html, body {
 #side-menu {
     z-index: 110;
     height: 100%;
-    width: 15%;
+    width: 180px;
     display:block;
     position:absolute;
     margin-left: 85%;
-    background-color: gray;
-    opacity: 0.6;
+    top: 10px;
+    font-family: 'SFNSText', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
 .block {
@@ -28,19 +29,46 @@ html, body {
     width: 100%;
     margin-bottom: 10px;
     padding: 20px 10px 10px 10px;
-    background-color: black;
+    background-color: white;
     position: relative;
     text-align: center;
-    color: white;
     cursor: pointer;
+    border: 1px solid #b9b6b6;
 }
 
 .block-title {
-    font-size: 16px;
     display: block;
     padding-bottom: 10px;
+    color: rgb(73, 73, 73);
+    font-size: 30px;
+    line-height: 27px;
+    font-weight: 300;
+    text-transform: capitalize;
 }
 
 .block-content {
     font-size: 12px;
+    color: rgba(73, 73, 73, 0.6);
+    font-weight: 500;
+}
+
+.block-line {
+    width: 200px;
+    height: 1px;
+    background-color: #e4e3e3;
+    margin-left: -10px;
+    margin-top: 20px;
+}
+
+.block-info {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: center;
+    color: #24a337;
+    height: 24px;
+    line-height: 15px;
+    top: 18px;
+    margin-right: 2px;
+    margin-left: 2px;
+    position: relative;
 }
