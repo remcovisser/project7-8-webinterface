@@ -4,16 +4,16 @@ var circles = [];
 var map;
 var updateMarkersRate = 10000;
 
-// Set all the markers every <updateMarkersRate> seconds
+// Set all the markers every <updateMarkersRate> milliseconds
 $(function() {
     var timerLoop;
     var timer = function(){
-        // Clear markers
+        // Clear markers and circles
         for (var i = 0; i < markers.length; i++ ) {
             markers[i].setMap(null);
             circles[i].setMap(null);
         }
-        // Add markers
+        // Add markers and circles
         $.get( api_url, function( data ) {
             for(var i = 0; i < data.length; i++) {
                 var location = data[i];
@@ -24,6 +24,7 @@ $(function() {
                     scaledSize: new google.maps.Size(50, 50), // scaled size
                     anchor: new google.maps.Point(25, 25) // anchor
                 };
+
                 // Create a marker at the location of a cart
                 var marker = new google.maps.Marker({
                     icon: icon,
@@ -31,10 +32,11 @@ $(function() {
                     map: map
                 });
                 markers.push(marker);
+
                 // Create a circle around a cart to show its accuracy
                 var circle = new google.maps.Circle({
-                    center: markers[0].position,
-                    radius: 100,
+                    center: markers[i].position,
+                    radius: location.accuracy,
                     map: map,
                     fillColor: '#24a337',
                     fillOpacity: 0.1,
