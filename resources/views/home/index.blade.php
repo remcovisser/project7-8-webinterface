@@ -11,20 +11,21 @@
 </head>
 <body>
 
-<div id="side-menu">
-    @foreach($carts as $cart)
-        <div class="block" onclick="blockClicked({{$cart->id -1}})">
-            <span class="block-title">{{ $cart->name }}</span>
-            <span class="block-content">{{ $cart->description }}</span>
-            <div class="block-line"></div>
-            <span class="block-info">Meer info</span>
-        </div>
-    @endforeach
-</div>
+<div id="app">
+    <div id="side-menu">
+        @foreach($carts as $cart)
+            <div class="block" onclick="blockClicked({{$cart->id -1}})">
+                <span class="block-title">{{ $cart->name }}</span>
+                <span class="block-content">{{ $cart->description }}</span>
+                <div class="block-line"></div>
+                <span class="block-info">Meer info</span>
+            </div>
+        @endforeach
+    </div>
 
-<div id="map"></div>
+    <div id="map"></div>
+</div>
 <script src="{{ asset('js/app.js') }}"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&callback=initMap"></script>
-<script src="{{ asset('js/map.js') }}"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}"></script>
 </body>
 </html>
