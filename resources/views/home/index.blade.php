@@ -23,7 +23,7 @@
 </div>
 
 <div id="map"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="{{ asset('js/app.js') }}"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}&callback=initMap"></script>
 <script src="{{ asset('js/map.js') }}"></script>
 </body>
