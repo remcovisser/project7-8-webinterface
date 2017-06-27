@@ -18,6 +18,10 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereMac($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string $wan_ip
+ * @property string $lan_ip
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereLanIp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereWanIp($value)
  */
 class Device extends Model
 {

@@ -19,7 +19,10 @@ class CreateDevicesTable extends Migration
             $table->integer('facility_id')->unsigned();
             $table->foreign('facility_id')->references('id')->on('facilities');
 
-            $table->string('mac', 18);
+            $table->string('mac', 17);
+
+            $table->string('wan_ip', 15);
+            $table->string('lan_ip', 15);
 
             $table->timestamps();
         });
