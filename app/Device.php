@@ -25,5 +25,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Device extends Model
 {
-    //
+    /* Relations */
+    public function locations()
+    {
+        return $this->hasMany(Location::class);
+    }
 }

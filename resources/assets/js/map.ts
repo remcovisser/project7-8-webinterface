@@ -7,7 +7,7 @@ export function map(): void {
     let markers: any[] = [];
     let circles: any[] = [];
     let map: any;
-    let updateMarkersRate: number = 10000;
+    let updateMarkersRate: number = 10000; // 10 seconds
 
     // Set all the markers every <updateMarkersRate> milliseconds
     $(function(): void {
@@ -33,7 +33,7 @@ export function map(): void {
                     // Create a marker at the location of a cart
                     let marker = new google.maps.Marker({
                         icon: icon,
-                        position: new google.maps.LatLng(location.latitude, location.longitude),
+                        position: new google.maps.LatLng(location.gps_latitude, location.gps_longitude),
                         map: map
                     });
                     markers.push(marker);
@@ -41,7 +41,7 @@ export function map(): void {
                     // Create a circle around a cart to show its accuracy
                     let circle = new google.maps.Circle({
                         center: markers[i].position,
-                        radius: location.accuracy,
+                        radius: location.gps_accuracy,
                         map: map,
                         fillColor: '#24a337',
                         fillOpacity: 0.1,
