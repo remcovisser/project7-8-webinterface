@@ -10,6 +10,13 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
+    /**
+     * Update device and location.
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function submit(Request $request)
     {
         // Update device info
