@@ -6,6 +6,7 @@ export function map(): void {
     let api_url: string = "http://project7-8-webinterface.dev/";
     let markers: any[] = [];
     let circles: any[] = [];
+    let lines: any[] = [];
     let map: any;
     let updateMarkersRate: number = 1000; // 10 seconds
     let icon = {
@@ -19,11 +20,17 @@ export function map(): void {
         initMap();
         let timerLoop: number;
         let timer = function() {
-            // Clear markers and circles
+            // Clear all the markers
             for (let i = 0; i < markers.length; i++) {
                 markers[i].setMap(null);
+            }
+            markers = [];
+            // Clear all the circles
+            for (let i = 0; i < circles.length; i++) {
                 circles[i].setMap(null);
             }
+            circles = [];
+
             if (updateMarkersRate != 0) {
                 // Add markers and circles
                 $.get(api_url + "get-last-location", function (data: any): void {
@@ -113,6 +120,20 @@ export function map(): void {
                             map: map
                         });
                         markers.push(marker);
+
+
+
+                        lines.push({lat:device.locations[i].gps_latitude, lng:device.locations[i].gps_longitude});
+                        let cartPath = new google.maps.Polyline({
+                            path: lines,
+                            geodesic: true,
+                            strokeColor: '#FF0000',
+                            strokeOpacity: 1.0,
+                            strokeWeight: 2
+                        });
+                        cartPath.setMap(map);
+
+
                     // If it's the last known location of a device, always use this location
                     } else {
                         let marker = new google.maps.Marker({
