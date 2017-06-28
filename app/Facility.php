@@ -20,8 +20,31 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Facility extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name'];
+
     public function beacons()
     {
         return $this->hasMany(Beacon::class);
+    }
+
+    public function devices()
+    {
+        return $this->hasMany(Device::class);
+    }
+
+    /**
+     * Get the first record matching the attributes or create it.
+     *
+     * @return Facility
+     */
+    public static function default() : Facility
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return Facility::firstOrCreate(['name' => 'Default']);
     }
 }

@@ -25,9 +25,22 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Device extends Model
 {
-    /* Relations */
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['mac'];
+
     public function locations()
     {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->hasMany(Location::class);
+    }
+
+    public function facility()
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return $this->belongsTo(Facility::class);
     }
 }
