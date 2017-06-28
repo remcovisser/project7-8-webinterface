@@ -72,3 +72,14 @@ html, body {
   margin-left: 2px;
   position: relative;
 }
+
+#play {
+  z-index: 105;
+  position: absolute;
+  top: 30px;
+  left: 13px;
+  color: red;
+  font-size: 20px;
+  background: black;
+  cursor: pointer;
+}

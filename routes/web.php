@@ -14,4 +14,8 @@
 Route::get('/', 'HomeController@index')->name('index');
 
 // API calls
-Route::get('/locations', 'HomeController@locations')->name('locations');
+Route::get('get-last-location', 'HomeController@getLastLocation')->name('getLastLocation');
+Route::get('get-daily-locations', 'HomeController@getDailyLocations')->name('getDailyLocations');
+
+// Temp
+Route::get('seed-locations', 'HomeController@seedLocations')->name('seedLocations');

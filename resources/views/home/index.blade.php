@@ -24,8 +24,10 @@
     </div>
 
     <div id="map"></div>
+    <p id="play" onclick="play()">Play</p>
+
 </div>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}"></script>
 <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
