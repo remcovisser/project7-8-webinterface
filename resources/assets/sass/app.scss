@@ -1,9 +1,74 @@
+html, body {
+  padding: 0;
+  margin: 0;
+}
 
-// Fonts
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+#map {
+  z-index: 100;
+  height: 100%;
+  width: 100%;
+  display: block;
+  position: absolute;
+}
 
-// Variables
-@import "variables";
+#side-menu {
+  z-index: 110;
+  height: 100%;
+  width: 180px;
+  display: block;
+  position: absolute;
+  margin-left: 85%;
+  top: 10px;
+  font-family: 'SFNSText', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
 
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+.block {
+  z-index: 105;
+  height: 120px;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 20px 10px 10px 10px;
+  background-color: white;
+  position: relative;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #B9B6B6;
+}
+
+.block-title {
+  display: block;
+  padding-bottom: 10px;
+  color: rgb(73, 73, 73);
+  font-size: 30px;
+  line-height: 27px;
+  font-weight: 300;
+  text-transform: capitalize;
+}
+
+.block-content {
+  font-size: 12px;
+  color: rgba(73, 73, 73, 0.6);
+  font-weight: 500;
+}
+
+.block-line {
+  width: 200px;
+  height: 1px;
+  background-color: #E4E3E3;
+  margin-left: -10px;
+  margin-top: 20px;
+}
+
+.block-info {
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  color: #24A337;
+  height: 24px;
+  line-height: 15px;
+  top: 18px;
+  margin-right: 2px;
+  margin-left: 2px;
+  position: relative;
+}
