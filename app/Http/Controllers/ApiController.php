@@ -36,8 +36,8 @@ class ApiController extends Controller
         /** @noinspection PhpUndefinedMethodInspection */
         $currentLocation = $device->locations()->orderBy('created_at', 'desc')->first() ?? new Location();
 
-        $lat = $this->sanatizeCoordinate($request->input('gps_latitude'));
-        $long = $this->sanatizeCoordinate($request->input('gps_longitude'));
+        $lat = $this->sanitizeCoordinate($request->input('gps_latitude'));
+        $long = $this->sanitizeCoordinate($request->input('gps_longitude'));
 
         // Add location if it changed
         if ($currentLocation->gps_latitude != $lat || !$currentLocation->gps_longitude == $long)
@@ -64,7 +64,14 @@ class ApiController extends Controller
         return response()->json(['message' => 'Successfully updated device and location.']);
     }
 
-    private function sanatizeCoordinate($coordinate)
+    /**
+     * Standardise default coordinate format.
+     *
+     * @param $coordinate
+     *
+     * @return float
+     */
+    private function sanitizeCoordinate($coordinate)
     {
         if ($coordinate == '0.0' || $coordinate == 'nan')
         {
