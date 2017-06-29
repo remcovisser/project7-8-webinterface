@@ -188,6 +188,7 @@ class HomeController extends Controller
             $location->gps_longitude = $pos[1];
             $location->created_at = $pos[2];
             $location->updated_at = $pos[3];
+            $location->device_id = 1;
 
             $location->gps_accuracy = 0;
             $location->bt_latitude = 0.0;
