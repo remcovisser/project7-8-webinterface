@@ -74,12 +74,22 @@ html, body {
 }
 
 #play {
+  font-family: 'SFNSText', 'Helvetica Neue', sans-serif;
+  background-color: white;
+  border: 1px solid #B9B6B6;
   z-index: 105;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  color: #24A337;
+  line-height: 15px;
+  top: 18px;
+  margin-right: 2px;
+  height: 30px;
+  width: 90px;
+  padding-top: 15px;
+  margin-top: 30px;
+  margin-left: 10px;
   position: absolute;
-  top: 30px;
-  left: 13px;
-  color: red;
-  font-size: 20px;
-  background: black;
   cursor: pointer;
 }

@@ -24,7 +24,7 @@ class HomeController extends Controller
         foreach($devices as $device) {
             $data[$device->id]['device_id'] = $device->id;
             $data[$device->id]['facility_id'] = $device->facility_id;
-            $data[$device->id]['locations'] = $device->locations->toArray();
+            $data[$device->id]['locations'] = $device->locations()->orderBy('created_at')->get()->toArray();
         }
         return $data;
     }

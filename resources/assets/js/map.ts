@@ -8,7 +8,8 @@ export function map(): void {
     let circles: any[] = [];
     let lines: any[] = [];
     let map: any;
-    let updateMarkersRate: number = 1000; // 10 seconds
+    let play: boolean = false;
+    let updateMarkersRate: number = 10000; // 10 seconds
     let icon = {
         url: "http://icons.iconarchive.com/icons/iconsmind/outline/512/Shopping-Cart-icon.png", // url
         scaledSize: new google.maps.Size(50, 50), // scaled size
@@ -44,7 +45,6 @@ export function map(): void {
                             map: map
                         });
                         markers.push(marker);
-
                         // Create a circle around a cart to show its accuracy
                         let circle = new google.maps.Circle({
                             center: markers[i].position,
@@ -74,18 +74,24 @@ export function map(): void {
 
     // Center map to the position of a marker
     (<any>window).blockClicked = function(block_id: number): void {
-        let marker = markers[block_id -1];
-        map.setCenter(new google.maps.LatLng(marker.position.lat(), marker.position.lng()));
+        let marker = markers[block_id];
+        map.setCenter(new google.maps.LatLng(parseFloat(marker.position.lat()), parseFloat(marker.position.lng())));
         map.setZoom(17);
     };
 
     // Play animation of the movement of all the cards for this day
     (<any>window).play = function(): void {
+        if(play) {
+            $("#play").text("Play");
+            play = false;
+        } else {
+            $("#play").text("Stop");
+            play = true;
+        }
         // Get the GPS data for each device for this day
         let devices: any[] = [];
-
-        $.get( api_url + "get-daily-locations", function( data: any ): void {
-            $.each( data, function( key: number, value: any[] ) {
+        $.get(api_url + "get-daily-locations", function (data: any): void {
+            $.each(data, function (key: number, value: any[]) {
                 devices.push(value);
             });
 
@@ -94,9 +100,9 @@ export function map(): void {
 
             // Iterate trough all the known locations of a device and display them
             let timerLoop: number;
-            let i:number = 0;
+            let i: number = 0;
 
-            let timer = function() {
+            let timer = function () {
                 i++;
                 // Clear all the markers
                 for (let i = 0; i < markers.length; i++) {
@@ -112,7 +118,7 @@ export function map(): void {
                 // Draw markers
                 for (let x = 0; x < devices.length; x++) {
                     let device = devices[x];
-                    if(i < device.locations.length) {
+                    if (i < device.locations.length) {
                         // Create a marker at the location of a cart
                         let marker = new google.maps.Marker({
                             icon: icon,
@@ -120,10 +126,22 @@ export function map(): void {
                             map: map
                         });
                         markers.push(marker);
+                        // Create a circle around a cart to show its accuracy
+                        let circle = new google.maps.Circle({
+                            center: markers[x].position,
+                            radius: device.locations[i].gps_accuracy,
+                            map: map,
+                            fillColor: '#24a337',
+                            fillOpacity: 0.1,
+                            strokeColor: '#ffffff',
+                            strokeOpacity: 0.3
+                        });
+                        circles.push(circle);
 
-
-
-                        lines.push({lat:device.locations[i].gps_latitude, lng:device.locations[i].gps_longitude});
+                        lines.push({
+                            lat: parseFloat(device.locations[i].gps_latitude),
+                            lng: parseFloat(device.locations[i].gps_longitude)
+                        });
                         let cartPath = new google.maps.Polyline({
                             path: lines,
                             geodesic: true,
@@ -133,12 +151,11 @@ export function map(): void {
                         });
                         cartPath.setMap(map);
 
-
                     // If it's the last known location of a device, always use this location
                     } else {
                         let marker = new google.maps.Marker({
                             icon: icon,
-                            position: new google.maps.LatLng(device.locations[device.locations.length -1].gps_latitude, device.locations[device.locations.length -1].gps_longitude),
+                            position: new google.maps.LatLng(device.locations[device.locations.length - 1].gps_latitude, device.locations[device.locations.length - 1].gps_longitude),
                             map: map
                         });
                         markers.push(marker);
@@ -147,9 +164,8 @@ export function map(): void {
                 // Repeat every 0.5 seconds
                 timerLoop = setTimeout(timer, 500);
             };
-        timer();
+            timer();
         });
     }
-
 
 }
