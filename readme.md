@@ -1,5 +1,8 @@
 ## Build status
 [![Build Status](http://project.maarten.co.uk:8080/job/Production/badge/icon)](http://project.maarten.co.uk:8080/job/Production/)
+[![Build Status](http://project.maarten.co.uk:8080/buildStatus/icon?job=Production)](http://project.maarten.co.uk:8080/job/Production/)
+[![Build Status](http://project.maarten.co.uk:8080/job/Production/badge/icon)](http://project.maarten.co.uk:8080/job/Production)
+[![Build Status](http://project.maarten.co.uk:8080/buildStatus/icon?job=Production)](http://project.maarten.co.uk:8080/job/Production)
 
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
