@@ -3,7 +3,7 @@ import * as $ from "jquery";
 
 export function map(): void {
     // Declare local variables
-    let api_url: string = "http://project7-8-webinterface.dev/";
+    let api_url: string = "/";
     let markers: any[] = [];
     let circles: any[] = [];
     let lines: any[] = [];
