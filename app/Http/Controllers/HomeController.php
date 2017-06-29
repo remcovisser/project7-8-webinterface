@@ -14,7 +14,7 @@ class HomeController extends Controller
 
     // Return the last know location for each device
     public function getLastLocation() {
-        return Location::groupBy('device_id')->get();
+        return Location::orderBy('id', 'desc')->get()->unique('device_id');
     }
 
     // Return all the know locations for each device for this day
