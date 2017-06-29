@@ -22,9 +22,9 @@ node {
 	}
 
 	stage('Frontend') {
-		sh 'npm install'
+		sh 'npm install || true'
 		sh 'npm rebuild node-sass'
-		sh 'npm run production'
+		sh 'npm run production || true'
 	}
 
 	stage('Deploy') {
@@ -39,7 +39,7 @@ node {
 
 		dir(livedir) {
 			sh "php artisan clear-compiled && php artisan optimize && php artisan cache:clear"
-			sh "npm run production"
+			sh "npm run production || true"
 		}
 	}
 }
