@@ -47,17 +47,36 @@ const app = new Vue({
 			if (id in this.entities)
 			{
 				console.log('update position');
-				const coords = new google.maps.LatLng(data.gps_latitude, data.gps_longitude);
-				this.entities[id].setPosition(coords);
+				const position = new google.maps.LatLng(data.gps_latitude, data.gps_longitude);
+
+				// update marker
+				this.entities[id].marker.setPosition(position);
+
+				// update line
+				const line = this.entities[id].line;
+				const path = line.getPath();
+				path.push(position);
+				line.setPath(path);
 			}
 			else
 			{
 				console.log('add marker');
-				this.entities[id] = new google.maps.Marker({
+				const position = new google.maps.LatLng(data.gps_latitude, data.gps_longitude);
+
+				// create marker
+				const marker = new google.maps.Marker({
 					icon: this.icon,
-					position: new google.maps.LatLng(data.gps_latitude, data.gps_longitude),
+					position: position,
 					map: this.googleMaps
 				});
+
+				// create line
+				const line = new google.maps.Polyline({
+					path: [position],
+					map: this.googleMaps
+				});
+				
+				this.entities[id] = { marker: marker, line: line }
 			}
 		}
 	}
