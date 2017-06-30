@@ -26,6 +26,8 @@ const app = new Vue({
 	},
 
 	mounted: function() {
+		if (document.getElementById('map_realtime') === null) return;
+
 		socket.on('stream', this.addLocation);
 		this.initMap();
 	},
