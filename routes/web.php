@@ -17,8 +17,5 @@ Route::get('/', 'HomeController@index')->name('index');
 Route::get('get-last-location', 'HomeController@getLastLocation')->name('getLastLocation');
 Route::get('get-daily-locations', 'HomeController@getDailyLocations')->name('getDailyLocations');
 
-// Temp
-Route::get('seed-locations', 'HomeController@seedLocations')->name('seedLocations');
-
 // Device API calls
-Route::post('submit', 'ApiController@submit');
+Route::post('submit', 'ApiController@submit')->name('submit');

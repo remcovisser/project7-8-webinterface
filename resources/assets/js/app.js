@@ -12,14 +12,29 @@ require('./map').map();
 
 window.Vue = require('vue');
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
-Vue.component('example', require('./components/Example.vue'));
+const socket = require('socket.io-client')(window.location.hostname + ':3000');
 
 const app = new Vue({
-    el: '#app'
+	el: '#app',
+
+	data: {
+		messages: [],
+	},
+
+	mounted: function() {
+		const that = this;
+
+		socket.on('stream', function(data) {
+			console.log(data);
+			that.messages.push(data);
+		});
+	},
+
+	// methods: {
+	// 	send: function(e) {
+	// 		socket.emit('test', 123);
+	//
+	// 		e.preventDefault()
+	// 	}
+	// }
 });

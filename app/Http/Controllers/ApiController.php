@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 
 class ApiController extends Controller
 {
+    private const DEFAULT_COORD = 0.0000000;
+    
     /**
      * Update device and location.
      *
@@ -34,10 +36,13 @@ class ApiController extends Controller
         // Check if location changed
         /** @var Location $currentLocation */
         /** @noinspection PhpUndefinedMethodInspection */
-        $currentLocation = $device->locations()->orderBy('created_at', 'desc')->first() ?? new Location();
+        $currentLocation = $device->locations()->with('device')->orderBy('created_at', 'desc')->first() ?? new Location();
+        $newLocation = $currentLocation;
 
         $lat = $this->sanitizeCoordinate($request->input('gps_latitude'));
         $long = $this->sanitizeCoordinate($request->input('gps_longitude'));
+
+        if ($lat == ApiController::DEFAULT_COORD || $long == ApiController::DEFAULT_COORD) return response()->json(['message' => 'Successfully updated device, but did not store location because it was "nan" or "0.0".']);
 
         // Add location if it changed
         if ($currentLocation->gps_latitude != $lat || !$currentLocation->gps_longitude == $long)
@@ -54,6 +59,8 @@ class ApiController extends Controller
             $location->bt_accuracy = 0;
 
             if (!$location->save()) return response()->json(['message' => 'Unable to store new location.'], 202);
+
+            $newLocation = $location;
         }
         else
         {
@@ -61,7 +68,9 @@ class ApiController extends Controller
             $currentLocation->touch();
         }
 
-        return response()->json(['message' => 'Successfully updated device and location.']);
+        if (!$this->triggerSocket($newLocation->toArray())) return response()->json(['message' => 'Successfully updated device and location, but could not inform the socket server.']);
+
+        return response()->json(['message' => 'Successfully updated device and location, and informed socket server.']);
     }
 
     /**
@@ -75,9 +84,33 @@ class ApiController extends Controller
     {
         if ($coordinate == '0.0' || $coordinate == 'nan')
         {
-            return 0.0000000;
+            return ApiController::DEFAULT_COORD;
         }
 
         return $coordinate;
+    }
+
+    /**
+     * Passes new device location to socket server.
+     *
+     * @param array $data
+     *
+     * @return bool
+     */
+    private function triggerSocket($data)
+    {
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . ':3000/submit';
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl);
+
+        $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+        curl_close($curl);
+
+        return ($http_code == 200 || $http_code == 204);
     }
 }

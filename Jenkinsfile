@@ -22,7 +22,7 @@ node {
 	}
 
 	stage('Frontend') {
-		sh 'npm install || true'
+		sh 'npm install --production || true'
 		sh 'npm rebuild node-sass'
 		sh 'npm run production || true'
 	}
