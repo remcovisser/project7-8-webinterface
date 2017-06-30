@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ mix('/css/app.css') }}">
 
     <title>Project 7-8</title>
 </head>
@@ -28,6 +28,6 @@
 
 </div>
 <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_API_KEY') }}"></script>
-<script src="{{ asset('js/app.js') }}"></script>
+<script src="{{ mix('/js/app.js') }}"></script>
 </body>
 </html>

@@ -27,4 +27,5 @@ mix
         resolve: {
             extensions: ['*', '.js', '.jsx', '.vue', '.ts', '.tsx']
         }
-    });
+    })
+	.version();
