@@ -3,7 +3,8 @@ html, body {
   margin: 0;
 }
 
-#map {
+#map,
+#map_realtime{
   z-index: 100;
   height: 100%;
   width: 100%;

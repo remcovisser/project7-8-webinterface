@@ -47,4 +47,9 @@ class HomeController extends Controller
 
         return $data;
     }
+
+    public function realtime()
+    {
+        return view('realtime');
+    }
 }

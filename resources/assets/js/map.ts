@@ -2,6 +2,8 @@ import {} from '@types/googlemaps';
 import * as $ from "jquery";
 
 export function map(): void {
+    if (document.getElementById('map') == null) return;
+
     // Declare local variables
     let api_url: string = "/";
     let markers: any[] = [];
