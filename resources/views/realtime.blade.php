@@ -18,13 +18,13 @@
         <button id="map_status" class="map_ui" :class="{ 'map_live': live }" v-on:click="enableLive"><i class="map_dot">&#9679;</i> Live</button>
 
         <div id="devices">
-            <div class="map_ui map_ui--transparent device" v-for="device in devices">
+            <a class="map_ui map_ui--transparent device" v-for="device in devices" v-on:click="focusDevice(device.mac)">
                 #@{{ device.id }}<br>
 
                 Status: <i class="map_dot">&#9679;</i><br>
                 Last update:<br>@{{ device.updated_at }}
 
-            </div>
+            </a>
         </div>
 
         <div id="map_playback">

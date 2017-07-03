@@ -31,6 +31,9 @@ class ApiController extends Controller
         // Set facility if none is defined
         if ($device->facility_id == null) $device->facility()->associate(Facility::default());
 
+        // Set random line colour if none have been defined
+        if ($device->colour == null) $device->colour = substr(str_shuffle('ABCDEF0123456789'), 0, 6);
+
         if (!$device->save()) return response()->json(['message' => 'Unable to resolve device.'], 202);
 
         // Check if location changed

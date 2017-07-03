@@ -78,6 +78,14 @@ const app = new Vue({
 			});
 		},
 
+		// Focus Google Maps onto selected device
+		focusDevice(mac_address) {
+			if (mac_address in this.entities)
+			{
+				this.googleMaps.setCenter(this.entities[mac_address].marker.getPosition());
+			}
+		},
+
 		// Load all registered devices from database.
 		loadDevices() {
 			$.get('/devices', devices => {
@@ -182,7 +190,7 @@ const app = new Vue({
 				const line = new google.maps.Polyline({
 					path: [position],
 					map: this.googleMaps,
-					// strokeColor: '#' + location.device.colour
+					strokeColor: '#' + location.device.colour
 				});
 
 				this.entities[mac_address] = { marker: marker, line: line }
