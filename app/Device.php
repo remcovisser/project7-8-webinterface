@@ -22,6 +22,10 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $lan_ip
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereLanIp($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereWanIp($value)
+ * @property string $colour
+ * @property-read \App\Facility $facility
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Location[] $locations
+ * @method static \Illuminate\Database\Eloquent\Builder|\App\Device whereColour($value)
  */
 class Device extends Model
 {

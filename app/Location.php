@@ -28,6 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Location whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \App\Device $device
  */
 class Location extends Model
 {

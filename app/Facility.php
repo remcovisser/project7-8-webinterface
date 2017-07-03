@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Facility whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Device[] $devices
  */
 class Facility extends Model
 {

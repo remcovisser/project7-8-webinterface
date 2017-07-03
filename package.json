@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@types/googlemaps": "^3.26.14",
-    "@types/jquery": "^3.2.4"
+    "@types/jquery": "^3.2.4",
+    "vuejs-datepicker": "^0.8.4"
   }
 }

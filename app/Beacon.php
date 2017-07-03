@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Beacon whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|\App\Beacon whereUuid($value)
  * @mixin \Eloquent
+ * @property-read \App\Facility $facility
  */
 class Beacon extends Model
 {

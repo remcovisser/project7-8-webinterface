@@ -1,0 +1,122 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: Roboto, Arial, sans-serif;
+}
+
+#map_realtime {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#map_date {
+  position: fixed;
+  left: 116px;
+  top: 10px;
+
+  background: #FFF;
+  border: 1px solid #B9B6B6;
+
+  input {
+    -webkit-appearance: none;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+  }
+}
+
+// Live button
+#map_status {
+  position: absolute;
+  right: 270px;
+  top: 10px;
+
+  background: rgba(0, 0, 0, .25);
+  color: #FFF;
+
+  i {
+    color: gray;
+  }
+
+  &.map_live {
+    i {
+      color: red;
+    }
+  }
+}
+
+// Devices
+#devices {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  bottom: 127px;
+
+  width: 250px;
+}
+
+.device {
+  margin-bottom: 10px;
+}
+
+// Playback controls
+#map_playback {
+  position: fixed;
+  left: 10px;
+  right: 48px;
+  bottom: 35px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+#map_playback--timeline {
+  width: 100%;
+  margin: 0 10px;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  display: flex;
+  align-items: stretch;
+}
+
+.map_playback--time {
+  padding: 0 5px;
+}
+
+.map_playback--range {
+  flex-grow: 1;
+
+  input {
+    width: 100%;
+  }
+}
+
+.map_ui {
+  padding: 4px 5px;
+  border-radius: 2px;
+  border: none;
+  font-size: inherit;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+.map_ui--transparent {
+  background: rgba(0, 0, 0, .25);
+  color: #FFF;
+}
+
+.map_dot {
+  font-style: normal;
+}
