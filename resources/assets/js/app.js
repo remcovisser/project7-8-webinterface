@@ -79,9 +79,9 @@ const app = new Vue({
 
 		// Focus Google Maps onto selected device
 		focusDevice(mac_address) {
-			if (mac_address in this.entities)
+			if (mac_address in this.entities && typeof this.entities[mac_address].maps !== "undefined")
 			{
-				this.googleMaps.setCenter(this.entities[mac_address].marker.getPosition());
+				this.googleMaps.setCenter(this.entities[mac_address].maps.marker.getPosition());
 			}
 		},
 
@@ -189,24 +189,31 @@ const app = new Vue({
 		addLocation(data) {
 			const device = data.device;
 			const location = data.location;
+			const position = (typeof location !== "undefined") ? new google.maps.LatLng(location.gps_latitude, location.gps_longitude) : null;
 
-			let position = null;
-			if (typeof location !== "undefined") position = new google.maps.LatLng(location.gps_latitude, location.gps_longitude);
 
-			// Create device object
-			this.entities[device.mac] = { device: device };
+			if (device.mac in this.entities)
+			{
+				this.entities[device.mac].device = device;
+			}
+			else
+			{
+				this.entities[device.mac] = { device: device };
+			}
 
-			if (!position) return;
+			if (position === null) return;
+
 			const entity = this.entities[device.mac];
 
 			// Check if previous location is known
 			if ('maps' in entity)
 			{
+				console.log('existing marker');
 				// Update existing marker
 				entity.maps.marker.setPosition(position);
 
 				// Extend existing line
-				const line = entity.line;
+				const line = entity.maps.line;
 
 				const path = line.getPath();
 				path.push(position);
@@ -214,6 +221,7 @@ const app = new Vue({
 			}
 			else
 			{
+				console.log('new marker');
 				// Create new marker
 				const marker = new google.maps.Marker({
 					icon: this.icon,
