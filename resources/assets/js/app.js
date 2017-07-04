@@ -191,7 +191,7 @@ const app = new Vue({
 			const location = data.location;
 
 			let position = null;
-			if (location !== null) position = new google.maps.LatLng(location.gps_latitude, location.gps_longitude);
+			if (typeof location !== "undefined") position = new google.maps.LatLng(location.gps_latitude, location.gps_longitude);
 
 			// Create device object
 			this.entities[device.mac] = { device: device };
