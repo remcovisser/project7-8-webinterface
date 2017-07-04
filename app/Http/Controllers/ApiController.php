@@ -45,7 +45,12 @@ class ApiController extends Controller
         $lat = $this->sanitizeCoordinate($request->input('gps_latitude'));
         $long = $this->sanitizeCoordinate($request->input('gps_longitude'));
 
-        if ($lat == ApiController::DEFAULT_COORD || $long == ApiController::DEFAULT_COORD) return response()->json(['message' => 'Successfully updated device, but did not store location because it was "nan" or "0.0".']);
+        // Stop if coordinates are null.
+        if ($lat == ApiController::DEFAULT_COORD || $long == ApiController::DEFAULT_COORD)
+        {
+            $this->triggerSocket(['device' => $device->toArray(), 'location' => null]);
+            return response()->json(['message' => 'Successfully updated device, but did not store location because it was "nan" or "0.0".']);
+        }
 
         // Add location if it changed
         if ($currentLocation->gps_latitude != $lat || !$currentLocation->gps_longitude == $long)
@@ -71,7 +76,9 @@ class ApiController extends Controller
             $currentLocation->touch();
         }
 
-        if (!$this->triggerSocket($newLocation->toArray())) return response()->json(['message' => 'Successfully updated device and location, but could not inform the socket server.']);
+        $locationArray = $newLocation->toArray();
+        unset($locationArray ['device']);
+        if (!$this->triggerSocket(['device' => $device->toArray(), 'location' => $locationArray])) return response()->json(['message' => 'Successfully updated device and location, but could not inform the socket server.']);
 
         return response()->json(['message' => 'Successfully updated device and location, and informed socket server.']);
     }

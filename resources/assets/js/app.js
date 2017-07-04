@@ -32,8 +32,7 @@ const app = new Vue({
 		playing: true,
 		timestamp: 0,
 		speed: 1000,
-		date: new Date(),
-		devices: []
+		date: new Date()
 	},
 
 	mounted() {
@@ -89,7 +88,19 @@ const app = new Vue({
 		// Load all registered devices from database.
 		loadDevices() {
 			$.get('/devices', devices => {
-				this.devices = devices;
+
+				devices.forEach(device => {
+					if (device.mac in this.entities)
+					{
+						// Update existing
+						this.entities[device.mac].device = device;
+					}
+					else
+					{
+						// Create new object
+						this.entities[device.mac] = { device: device }
+					}
+				});
 			});
 		},
 
@@ -160,19 +171,43 @@ const app = new Vue({
 			}
 		},
 
-		// Add marker and line to Google Maps instance.
-		addLocation(location) {
-			const mac_address = location.device.mac;
-			const position = new google.maps.LatLng(location.gps_latitude, location.gps_longitude);
+		// Set date to EU format.
+		formatDate(datetime) {
+			const date = new Date(datetime);
 
-			// Check if device is known
-			if (mac_address in this.entities)
+			return (
+				("00" + date.getDate()).slice(-2) + '-' +
+				("00" + (date.getMonth() + 1)).slice(-2) + '-' +
+				date.getFullYear() + " " +
+				("00" + date.getHours()).slice(-2) + ':' +
+				("00" + date.getMinutes()).slice(-2) + ':' +
+				("00" + date.getSeconds()).slice(-2)
+			);
+		},
+
+		// Add marker and line to Google Maps instance.
+		addLocation(data) {
+			const device = data.device;
+			const location = data.location;
+
+			let position = null;
+			if (location !== null) position = new google.maps.LatLng(location.gps_latitude, location.gps_longitude);
+
+			// Create device object
+			this.entities[device.mac] = { device: device };
+
+			if (!position) return;
+			const entity = this.entities[device.mac];
+
+			// Check if previous location is known
+			if ('maps' in entity)
 			{
 				// Update existing marker
-				this.entities[mac_address].marker.setPosition(position);
+				entity.maps.marker.setPosition(position);
 
 				// Extend existing line
-				const line = this.entities[mac_address].line;
+				const line = entity.line;
+
 				const path = line.getPath();
 				path.push(position);
 				line.setPath(path);
@@ -183,18 +218,48 @@ const app = new Vue({
 				const marker = new google.maps.Marker({
 					icon: this.icon,
 					position: position,
-					map: this.googleMaps
+					map: this.googleMaps,
+					title: '#' + device.id + ' (' + device.mac + ')'
 				});
 
 				// Create new line
 				const line = new google.maps.Polyline({
 					path: [position],
 					map: this.googleMaps,
-					strokeColor: '#' + location.device.colour
+					strokeColor: '#' + device.colour
 				});
 
-				this.entities[mac_address] = { marker: marker, line: line }
+				entity.maps = { marker: marker, line: line }
 			}
+		},
+
+		// Returns time in seconds.
+		getTimeDifference(lastDateTime) {
+			const now = new Date().getTime();
+			const last = new Date(lastDateTime).getTime();
+
+			return Math.floor((now - last) / 1000);
+		},
+
+		// Check whether device is considered live.
+		deviceStatusLive(device) {
+			const difference = this.getTimeDifference(device.updated_at);
+
+			return (difference <= 15);
+		},
+
+		// Check whether device is considered warning.
+		deviceStatusWarning(device) {
+			const difference = this.getTimeDifference(device.updated_at);
+
+			return (difference <= 60);
+		},
+
+		// Check whether device is considered offline.
+		deviceStatusOffline(device) {
+			const difference = this.getTimeDifference(device.updated_at);
+
+			return (difference > 60);
 		}
 	}
 });
