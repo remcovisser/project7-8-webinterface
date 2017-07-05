@@ -14,7 +14,7 @@
     <div id="app">
         <div id="map_realtime"></div>
 
-        <div id="map_date" class="map_ui"><datepicker :monday-first="true" format="dd-MM-yyyy" v-model="date"></datepicker></div>
+        <div id="map_date" class="map_ui"><datepicker :monday-first="true" format="dd-MM-yyyy" v-model="date" :highlighted="availableDates"></datepicker></div>
         <button id="map_status" class="map_ui" :class="{ 'map_live': live }" v-on:click="enableLive"><i class="map_dot">&#9679;</i> Live</button>
 
         <div id="devices">

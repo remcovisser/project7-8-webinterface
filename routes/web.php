@@ -19,6 +19,7 @@ Route::get('get-daily-locations', 'HomeController@getDailyLocations')->name('get
 
 Route::get('realtime', 'HomeController@realtime')->name('realtime');
 Route::get('devices', 'DeviceController@index')->name('devices');
+Route::get('locations/dates', 'LocationController@getDates')->name('getAllDates');
 Route::get('locations/{date}', 'LocationController@showByDate')->name('showByDate');
 
 // Device API calls

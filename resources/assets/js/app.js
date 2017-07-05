@@ -25,9 +25,10 @@ const app = new Vue({
 
 	data: {
 		googleMaps: {},
-		icon: { url: "http://icons.iconarchive.com/icons/iconsmind/outline/512/Shopping-Cart-icon.png", scaledSize: new google.maps.Size(50, 50), anchor: new google.maps.Point(25, 25) },
+		icon: { url: '/img/cart.png', scaledSize: new google.maps.Size(50, 50), anchor: new google.maps.Point(25, 25) },
 		entities: {},
 		locations: {},
+		availableDates: { dates: [] },
 
 		live: false,
 		playing: true,
@@ -45,6 +46,7 @@ const app = new Vue({
 		// Bootstrap application
 		this.initMap();
 		this.loadDevices();
+		this.loadAvailableDates();
 		this.incrementTimestamp();
 	},
 
@@ -102,6 +104,17 @@ const app = new Vue({
 						this.addDevice(device);
 					}
 				});
+			});
+		},
+
+		loadAvailableDates() {
+			const that = this;
+			$.get('/locations/dates', data => {
+
+				data.forEach(date => {
+					that.availableDates.dates.push(new Date(date));
+				});
+
 			});
 		},
 
