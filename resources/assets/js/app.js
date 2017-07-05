@@ -27,6 +27,7 @@ const app = new Vue({
 		googleMaps: {},
 		icon: { url: "http://icons.iconarchive.com/icons/iconsmind/outline/512/Shopping-Cart-icon.png", scaledSize: new google.maps.Size(50, 50), anchor: new google.maps.Point(25, 25) },
 		entities: {},
+		locations: {},
 
 		live: false,
 		playing: true,
@@ -78,10 +79,10 @@ const app = new Vue({
 		},
 
 		// Focus Google Maps onto selected device
-		focusDevice(mac_address) {
-			if (mac_address in this.entities && typeof this.entities[mac_address].maps !== "undefined")
+		focusDevice(id) {
+			if (id in this.entities && typeof this.entities[id].maps !== "undefined")
 			{
-				this.googleMaps.setCenter(this.entities[mac_address].maps.marker.getPosition());
+				this.googleMaps.setCenter(this.entities[id].maps.marker.getPosition());
 			}
 		},
 
@@ -90,15 +91,15 @@ const app = new Vue({
 			$.get('/devices', devices => {
 
 				devices.forEach(device => {
-					if (device.mac in this.entities)
+					if (device.id in this.entities)
 					{
 						// Update existing
-						this.entities[device.mac].device = device;
+						this.entities[device.id].device = device;
 					}
 					else
 					{
 						// Create new object
-						this.entities[device.mac] = { device: device }
+						this.addDevice(device);
 					}
 				});
 			});
@@ -118,11 +119,80 @@ const app = new Vue({
 			else
 			{
 				// Increment time
-				if (this.playing) this.timestamp++;
+
+				if (this.playing)
+				{
+					this.timestamp++;
+					this.updateMap();
+				}
 			}
 
 			// TODO: Make sure this does not get ahead of the application.
 			setTimeout(this.incrementTimestamp, speed);
+		},
+
+		// Apply location and line to map based on timestamp.
+		updateMap() {
+			const date = this.dateToNiceDate(this.date);
+			if (!(date in this.locations)) return this.getLocations(date, this.updateMap);
+
+			// Compile data
+			let locations = {};
+			this.locations[date].forEach(location => {
+				let createdAt = new Date(location.created_at);
+				if (this.timestamp < (createdAt.getHours() * 3600) + (createdAt.getMinutes() * 60) + createdAt.getSeconds()) return; // Only apply locations before current timestamp
+
+				// Create array
+				if (!(location.device_id in locations)) locations[location.device_id] = [];
+
+				// Apply LatLng
+				locations[location.device_id].push(new google.maps.LatLng(location.gps_latitude, location.gps_longitude));
+			});
+
+			// Locations to entities
+			for (let id in this.entities)
+			{
+				//noinspection JSUnfilteredForInLoop
+				let entity = this.entities[id];
+
+				if (id in locations)
+				{
+					//noinspection JSUnfilteredForInLoop
+					let positions = locations[id];
+					let maps = entity.maps;
+
+					// Set path
+					maps.line.setPath(positions);
+
+					// Set position to latest path position
+					if (typeof maps.marker.getMap() === "undefined") maps.marker.setMap(this.googleMaps);
+					maps.marker.setPosition(positions[positions.length - 1]); // Apply marker to last known position
+				}
+				else
+				{
+					entity.maps.line.setPath([]);
+					entity.maps.marker.setMap(null);
+				}
+			}
+
+			// console.log('Drawn timestamp: ' + this.timestamp);
+		},
+
+		getLocations(date, callback) {
+			const wasPlaying = this.playing;
+
+			// Pause playback while requesting data
+			if (wasPlaying) this.playing = false;
+
+			const that = this;
+			return $.get('/locations/' + date, locations => {
+				that.locations[date] = locations;
+
+				// Loading is done, continue playback
+				if (wasPlaying) this.playing = true;
+
+				callback();
+			});
 		},
 
 		// Increment application speed in steps.
@@ -144,8 +214,11 @@ const app = new Vue({
 				case 20000:
 					this.speed = 50000;
 				break;
+				case 50000:
+					this.speed = 60000; // one second is one minute
+					break;
 				default:
-					this.speed = 1000; // real time
+					this.speed = 1000; // one second is one second
 				break;
 			}
 		},
@@ -175,6 +248,18 @@ const app = new Vue({
 		formatDate(datetime) {
 			const date = new Date(datetime);
 
+			return this.dateToNiceDateTime(date);
+		},
+
+		dateToNiceDate(date) {
+			return (
+				("00" + date.getDate()).slice(-2) + '-' +
+				("00" + (date.getMonth() + 1)).slice(-2) + '-' +
+				date.getFullYear()
+			);
+		},
+
+		dateToNiceDateTime(date) {
 			return (
 				("00" + date.getDate()).slice(-2) + '-' +
 				("00" + (date.getMonth() + 1)).slice(-2) + '-' +
@@ -187,58 +272,46 @@ const app = new Vue({
 
 		// Add marker and line to Google Maps instance.
 		addLocation(data) {
-			const device = data.device;
-			const location = data.location;
-			const position = (typeof location !== "undefined") ? new google.maps.LatLng(location.gps_latitude, location.gps_longitude) : null;
+			const device = data.device,
+				location = data.location;
 
+			// Create new entity
+			if (!(device.id in this.entities)) this.addDevice(device);
+			const entity = this.entities[device.id];
 
-			if (device.mac in this.entities)
-			{
-				this.entities[device.mac].device = device;
-			}
-			else
-			{
-				this.entities[device.mac] = { device: device };
-			}
+			// Update device
+			entity.device = device;
 
-			if (position === null) return;
+			// Check whether we need to apply a new location
+			if (!(typeof location !== "undefined")) return;
+			const position = new google.maps.LatLng(location.gps_latitude, location.gps_longitude);
 
-			const entity = this.entities[device.mac];
+			// Update marker
+			const maps = entity.maps;
+			maps.marker.setPosition(position);
+			maps.marker.setMap(this.googleMaps);
 
-			// Check if previous location is known
-			if ('maps' in entity)
-			{
-				console.log('existing marker');
-				// Update existing marker
-				entity.maps.marker.setPosition(position);
+			// Extend line
+			const path = maps.line.getPath();
+			path.push(position);
+			maps.line.setPath(path);
+		},
 
-				// Extend existing line
-				const line = entity.maps.line;
-
-				const path = line.getPath();
-				path.push(position);
-				line.setPath(path);
-			}
-			else
-			{
-				console.log('new marker');
-				// Create new marker
-				const marker = new google.maps.Marker({
-					icon: this.icon,
-					position: position,
-					map: this.googleMaps,
-					title: '#' + device.id + ' (' + device.mac + ')'
-				});
-
-				// Create new line
-				const line = new google.maps.Polyline({
-					path: [position],
-					map: this.googleMaps,
-					strokeColor: '#' + device.colour
-				});
-
-				entity.maps = { marker: marker, line: line }
-			}
+		addDevice(device) {
+			this.entities[device.id] = {
+				device: device,
+				maps: {
+					marker: new google.maps.Marker({
+						icon: this.icon,
+						title: '#' + device.id + ' (' + device.mac + ')'
+					}),
+					line: new google.maps.Polyline({
+						path: [],
+						map: this.googleMaps,
+						strokeColor: '#' + device.colour
+					})
+				}
+			};
 		},
 
 		// Returns time in seconds.

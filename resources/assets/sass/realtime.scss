@@ -10,6 +10,10 @@ body {
   font-family: Roboto, Arial, sans-serif;
 }
 
+a, button {
+  cursor: pointer;
+}
+
 #map_realtime {
   position: absolute;
   top: 0;
@@ -34,6 +38,7 @@ body {
 
     width: 90px;
     text-align: center;
+    cursor: pointer;
   }
 }
 
@@ -65,6 +70,8 @@ body {
   bottom: 127px;
 
   width: 200px;
+
+  pointer-events: none;
 }
 
 .device {
@@ -72,6 +79,7 @@ body {
   position: relative;
   margin-bottom: 10px;
   text-decoration: none;
+  pointer-events: initial;
 }
 
 .device_number {

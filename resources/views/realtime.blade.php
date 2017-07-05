@@ -18,7 +18,7 @@
         <button id="map_status" class="map_ui" :class="{ 'map_live': live }" v-on:click="enableLive"><i class="map_dot">&#9679;</i> Live</button>
 
         <div id="devices">
-            <a class="map_ui map_ui--transparent device" v-for="entity in entities" v-on:click="focusDevice(entity.device.mac)" :class="{ 'device_live': deviceStatusLive(entity.device), 'device_warning': deviceStatusWarning(entity.device), 'device_offline': deviceStatusOffline(entity.device) }">
+            <a class="map_ui map_ui--transparent device" v-for="entity in entities" v-on:click="focusDevice(entity.device.id)" :class="{ 'device_live': deviceStatusLive(entity.device), 'device_warning': deviceStatusWarning(entity.device), 'device_offline': deviceStatusOffline(entity.device) }">
                 <span class="device_number">#@{{ entity.device.id }}</span>
                 Status: <i class="map_dot">&#9679;</i><br>
                 Last update:<br>@{{ formatDate(entity.device.updated_at) }}<br>
