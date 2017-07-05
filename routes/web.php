@@ -11,16 +11,17 @@
 |
 */
 
-Route::get('/', 'HomeController@index')->name('index');
+Route::get('/', 'HomeController@realtime');
 
 // Browser API calls
-Route::get('get-last-location', 'HomeController@getLastLocation')->name('getLastLocation');
-Route::get('get-daily-locations', 'HomeController@getDailyLocations')->name('getDailyLocations');
-
-Route::get('realtime', 'HomeController@realtime')->name('realtime');
-Route::get('devices', 'DeviceController@index')->name('devices');
-Route::get('locations/dates', 'LocationController@getDates')->name('getAllDates');
-Route::get('locations/{date}', 'LocationController@showByDate')->name('showByDate');
+Route::get('devices', 'DeviceController@index');
+Route::get('locations/dates', 'LocationController@getDates');
+Route::get('locations/{date}', 'LocationController@showByDate');
 
 // Device API calls
-Route::post('submit', 'ApiController@submit')->name('submit');
+Route::post('submit', 'ApiController@submit');
+
+// Archive version
+Route::get('archive', 'HomeController@index');
+Route::get('get-last-location', 'HomeController@getLastLocation');
+Route::get('get-daily-locations', 'HomeController@getDailyLocations');
